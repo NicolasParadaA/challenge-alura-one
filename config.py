@@ -23,7 +23,7 @@ CHUNK_OVERLAP: int = 100
 
 # Retrieval
 TOP_K: int = 4
-SIMILARITY_THRESHOLD: float = 0.3
+SIMILARITY_THRESHOLD: float = 18.0  # L2 distance; lower = more similar
 
 # Generation
 TEMPERATURE: float = 0.2
