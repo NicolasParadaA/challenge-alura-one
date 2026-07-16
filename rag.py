@@ -25,10 +25,16 @@ from config import (
 # ---------------------------------------------------------------------------
 
 RAG_PROMPT_TEMPLATE = (
-    "Basado en el siguiente contexto, responde la pregunta. "
-    "Si no sabes, di que no tienes información.\n\n"
-    "Contexto: {context}\n\n"
-    "Pregunta: {question}"
+    "Eres un asistente de BimBam Buy. Usa la información del contexto para responder.\n\n"
+    "CONTEXTO:\n{context}\n\n"
+    "PREGUNTA: {question}\n\n"
+    "INSTRUCCIONES:\n"
+    "1. Responde directamente basándote en el contexto.\n"
+    "2. Si el contexto contiene información relevante, úsala sin dudar.\n"
+    "3. Sé claro y organiza la información en puntos cuando sea apropiado.\n"
+    "4. Solo di 'no tengo información' si el contexto NO tiene nada relacionado con la pregunta.\n"
+    "5. No repitas la misma idea con diferentes palabras.\n\n"
+    "RESPUESTA:"
 )
 
 rag_prompt = ChatPromptTemplate.from_template(RAG_PROMPT_TEMPLATE)

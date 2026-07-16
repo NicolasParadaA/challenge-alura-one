@@ -59,6 +59,18 @@ def create_vectorstore(chunks: list, persist_dir: str) -> None:
     """Create ChromaDB vector store from chunks."""
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
 
+    # Check if vectorstore already exists
+    if os.path.exists(persist_dir):
+        existing = Chroma(
+            persist_directory=persist_dir,
+            embedding_function=embeddings,
+        )
+        count = existing._collection.count()
+        if count > 0:
+            print(f"Vector store already exists with {count} vectors. Skipping ingestion.")
+            print("To re-ingest, delete the chroma_db/ directory first.")
+            return
+
     vectorstore = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,

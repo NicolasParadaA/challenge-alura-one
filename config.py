@@ -15,7 +15,7 @@ DOCS_DIR: str = "docs"
 
 # Model settings
 EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
-LLM_MODEL: str = "llama-3.1-8b-instant"
+LLM_MODEL: str = "llama-3.3-70b-versatile"
 
 # Chunking
 CHUNK_SIZE: int = 500
@@ -27,4 +27,4 @@ SIMILARITY_THRESHOLD: float = 18.0  # L2 distance; lower = more similar
 
 # Generation
 TEMPERATURE: float = 0.2
-MAX_TOKENS: int = 1000
+MAX_TOKENS: int = 800
