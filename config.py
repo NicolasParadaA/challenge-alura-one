@@ -23,7 +23,7 @@ CHUNK_OVERLAP: int = 100
 
 # Retrieval
 TOP_K: int = 6
-SIMILARITY_THRESHOLD: float = 18.0  # L2 distance; lower = more similar
+SIMILARITY_THRESHOLD: float = 17.3  # L2 distance; empirical P75 of in-scope scores
 MMR_LAMBDA: float = 0.7
 FALLBACK_MESSAGE: str = (
     "No encontré información relevante en los documentos "
