@@ -23,7 +23,7 @@ Agente de inteligencia artificial corporativo que responde preguntas de colabora
 │                    │                  │          │     │
 │              ┌─────▼─────┐    ┌──────▼──────┐  │     │
 │              │  ChromaDB   │    │  Groq LLM   │  │     │
-│              │  (Vectores) │    │  (Llama 3.1) │  │     │
+│              │  (Vectores) │    │  (Llama 3.3) │  │     │
 │              └───────────┘    └─────────────┘  │     │
 │                                                 │     │
 │                    ┌────────────────────────────┘     │
@@ -43,7 +43,7 @@ Agente de inteligencia artificial corporativo que responde preguntas de colabora
 | Framework RAG | LangChain |
 | Vector Store | ChromaDB |
 | Embeddings | paraphrase-multilingual-MiniLM-L12-v2 |
-| LLM | Groq Llama 3.1 8B Instant |
+| LLM | Groq Llama 3.3 70B Versatile |
 | Backend API | FastAPI |
 | Frontend | Streamlit |
 | Deploy | Docker + OCI |
