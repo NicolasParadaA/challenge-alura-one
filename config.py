@@ -22,8 +22,13 @@ CHUNK_SIZE: int = 500
 CHUNK_OVERLAP: int = 100
 
 # Retrieval
-TOP_K: int = 4
+TOP_K: int = 6
 SIMILARITY_THRESHOLD: float = 18.0  # L2 distance; lower = more similar
+MMR_LAMBDA: float = 0.7
+FALLBACK_MESSAGE: str = (
+    "No encontré información relevante en los documentos "
+    "de BimBam Buy para responder tu pregunta."
+)
 
 # Generation
 TEMPERATURE: float = 0.2

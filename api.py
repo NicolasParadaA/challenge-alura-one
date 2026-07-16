@@ -14,7 +14,7 @@ from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from config import CHROMA_DIR, EMBEDDING_MODEL
-from rag import build_rag_chain, get_relevant_docs, format_docs
+from rag import run_rag
 
 # ---------------------------------------------------------------------------
 # App
@@ -97,19 +97,17 @@ class HealthResponse(BaseModel):
 # ---------------------------------------------------------------------------
 
 vectorstore: Optional[Chroma] = None
-rag_chain = None
 
 
 @app.on_event("startup")
 async def load_vectorstore() -> None:
     """Load the persisted ChromaDB vector store at startup."""
-    global vectorstore, rag_chain
+    global vectorstore
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = Chroma(
         persist_directory=CHROMA_DIR,
         embedding_function=embeddings,
     )
-    rag_chain = build_rag_chain(vectorstore)
     print(f"Vector store loaded: {vectorstore._collection.count()} vectors")
 
 
@@ -120,7 +118,7 @@ async def load_vectorstore() -> None:
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest) -> ChatResponse:
     """Process a chat message using RAG."""
-    global vectorstore, rag_chain
+    global vectorstore
 
     if vectorstore is None:
         raise HTTPException(status_code=503, detail="Vector store not ready")
@@ -132,10 +130,6 @@ async def chat(req: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=422, detail="Session ID cannot be empty")
 
     try:
-        # Retrieve relevant documents
-        docs, sources = get_relevant_docs(req.message, vectorstore)
-        context = format_docs(docs)
-
         # Build context with conversation history
         history = _get_session_history(req.session_id)
         history_text = ""
@@ -146,18 +140,16 @@ async def chat(req: ChatRequest) -> ChatResponse:
             )
             history_text = f"\n\nHistorial reciente:\n{history_text}"
 
-        full_context = context + history_text
-
-        # Generate answer
-        answer = rag_chain.invoke({"context": full_context, "question": req.message})
+        # Run RAG pipeline (includes retrieval, fallback check, generation)
+        result = run_rag(req.message, vectorstore, history_text=history_text)
 
         # Store messages in session
         _add_message(req.session_id, "user", req.message)
-        _add_message(req.session_id, "assistant", answer)
+        _add_message(req.session_id, "assistant", result["answer"])
 
         return ChatResponse(
-            answer=answer,
-            sources=sources,
+            answer=result["answer"],
+            sources=result["sources"],
             session_id=req.session_id,
         )
 
