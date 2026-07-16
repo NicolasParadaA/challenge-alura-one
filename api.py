@@ -25,7 +25,7 @@ app = FastAPI(title="BimBam Buy RAG Agent", version="0.2.0")
 # CORS — allow Streamlit frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8501"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
