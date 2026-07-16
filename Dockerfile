@@ -21,6 +21,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .
+RUN chmod +x start.sh
 
 # Expose ports
 EXPOSE 8000 8501
