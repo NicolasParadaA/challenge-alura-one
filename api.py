@@ -5,16 +5,18 @@ CORS, and error handling.
 """
 
 import time
-from typing import Optional
+import json
+from typing import AsyncGenerator, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
 from config import CHROMA_DIR, EMBEDDING_MODEL
-from rag import run_rag
+from rag import run_rag, run_rag_stream
 
 # ---------------------------------------------------------------------------
 # App
@@ -157,6 +159,57 @@ async def chat(req: ChatRequest) -> ChatResponse:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal error: {str(e)}")
+
+
+@app.post("/chat/stream")
+async def chat_stream(req: ChatRequest):
+    """Stream RAG response as SSE events.
+
+    Each event is a JSON object on a `data:` line:
+        {"token": "..."}                    — streamed token
+        {"sources": [...], "done": true}    — final event
+    """
+    global vectorstore
+
+    if vectorstore is None:
+        raise HTTPException(status_code=503, detail="Vector store not ready")
+
+    if not req.message.strip():
+        raise HTTPException(status_code=422, detail="Message cannot be empty")
+
+    if not req.session_id.strip():
+        raise HTTPException(status_code=422, detail="Session ID cannot be empty")
+
+    async def event_generator() -> AsyncGenerator[str, None]:
+        # Build conversation history context
+        history = _get_session_history(req.session_id)
+        history_text = ""
+        if history:
+            history_text = "\n".join(
+                f"{'Usuario' if m['role'] == 'user' else 'Asistente'}: {m['content']}"
+                for m in history[-6:]
+            )
+            history_text = f"\n\nHistorial reciente:\n{history_text}"
+
+        full_answer = ""
+        for event in run_rag_stream(req.message, vectorstore, history_text=history_text):
+            if "token" in event:
+                full_answer += event["token"]
+            yield f"data: {json.dumps(event)}\n\n"
+
+        # Store in session after stream completes
+        _add_message(req.session_id, "user", req.message)
+        _add_message(req.session_id, "assistant", full_answer)
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.get("/health", response_model=HealthResponse)

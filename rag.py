@@ -123,6 +123,31 @@ def build_rag_chain(vectorstore: Chroma):
     return chain
 
 
+def run_rag_stream(question: str, vectorstore: Chroma, history_text: str = ""):
+    """Streaming RAG: yields token dicts then a final done event.
+
+    Yields:
+        {"token": "<chunk>"}          — one per streamed token
+        {"sources": [...], "done": True}  — final event
+    """
+    docs, sources = get_relevant_docs(question, vectorstore)
+    if not docs:
+        yield {"sources": [], "done": True}
+        return
+
+    context = format_docs(docs)
+    if history_text:
+        context += history_text
+
+    chain = build_rag_chain(vectorstore)
+    full_answer = ""
+    for chunk in chain.stream({"context": context, "question": question}):
+        full_answer += str(chunk)
+        yield {"token": str(chunk)}
+
+    yield {"sources": sources, "done": True}
+
+
 def run_rag(question: str, vectorstore: Chroma, history_text: str = "") -> dict:
     """End-to-end RAG call: retrieve → format → generate → return answer + sources.
 
