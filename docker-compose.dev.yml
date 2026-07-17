@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  bimbam-agent:
+    build: .
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    volumes:
+      # Mount source code for hot reload (changes reflect immediately)
+      - .:/app
+      # Keep data volumes
+      - ./docs:/app/docs
+      - ./chroma_db:/app/chroma_db
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=development
+    # Override start command for development (with --reload)
+    command: >
+      sh -c "
+        uvicorn api:app --host 0.0.0.0 --port 8000 --reload &
+        sleep 3 &&
+        streamlit run app.py --server.port 8501 --server.address 0.0.0.0 --server.runOnSave true
+      "
+    restart: unless-stopped
