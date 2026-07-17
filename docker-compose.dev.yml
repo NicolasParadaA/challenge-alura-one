@@ -7,8 +7,13 @@ services:
       - "8000:8000"
       - "8501:8501"
     volumes:
-      # Mount source code for hot reload (changes reflect immediately)
-      - .:/app
+      # Mount ONLY source code for hot reload (not .git, docs, etc.)
+      - ./app.py:/app/app.py
+      - ./api.py:/app/api.py
+      - ./rag.py:/app/rag.py
+      - ./config.py:/app/config.py
+      - ./ingest.py:/app/ingest.py
+      - ./start.sh:/app/start.sh
       # Keep data volumes
       - ./docs:/app/docs
       - ./chroma_db:/app/chroma_db
