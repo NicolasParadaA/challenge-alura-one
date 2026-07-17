@@ -1,16 +1,13 @@
-# Stage 1: Build
+# Build stage
 FROM python:3.14-slim AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies first (cached layer)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
-
-# Stage 2: Runtime
+# Runtime stage
 FROM python:3.14-slim
 
 WORKDIR /app
@@ -19,7 +16,7 @@ WORKDIR /app
 COPY --from=builder /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code
+# Copy application code (ONLY ONCE)
 COPY . .
 RUN chmod +x start.sh
 
