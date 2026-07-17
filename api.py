@@ -4,14 +4,17 @@ Provides POST /chat and GET /health endpoints with session memory,
 CORS, and error handling.
 """
 
+import os
+import re
 import time
 import json
+from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -19,26 +22,24 @@ from config import CHROMA_DIR, EMBEDDING_MODEL
 from rag import run_rag, run_rag_stream
 
 # ---------------------------------------------------------------------------
-# App
-# ---------------------------------------------------------------------------
-
-app = FastAPI(title="BimBam Buy RAG Agent", version="0.2.0")
-
-# CORS — allow Streamlit frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ---------------------------------------------------------------------------
-# In-memory session store
+# Constants
 # ---------------------------------------------------------------------------
 
 SESSION_TTL_SECONDS = 30 * 60  # 30 minutes
 MAX_SESSION_MESSAGES = 10      # 5 user + 5 assistant
+MAX_MESSAGE_LENGTH = 2000      # Max characters per user message
+SESSION_ID_PATTERN = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+
+# CORS — restrict to known origins (comma-separated env var)
+ALLOWED_ORIGINS: list[str] = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:8501").split(",")
+    if origin.strip()
+]
+
+# ---------------------------------------------------------------------------
+# In-memory session store
+# ---------------------------------------------------------------------------
 
 sessions: dict[str, list[dict]] = {}
 session_timestamps: dict[str, float] = {}
@@ -54,6 +55,11 @@ def _cleanup_expired_sessions() -> None:
     for sid in expired:
         sessions.pop(sid, None)
         session_timestamps.pop(sid, None)
+
+
+def _validate_session_id(session_id: str) -> bool:
+    """Validate that session_id is a proper UUID v4."""
+    return bool(SESSION_ID_PATTERN.match(session_id))
 
 
 def _get_session_history(session_id: str) -> list[dict]:
@@ -79,8 +85,8 @@ def _add_message(session_id: str, role: str, content: str) -> None:
 # ---------------------------------------------------------------------------
 
 class ChatRequest(BaseModel):
-    message: str
-    session_id: str
+    message: str = Field(..., min_length=1, max_length=MAX_MESSAGE_LENGTH)
+    session_id: str = Field(..., min_length=36, max_length=36)
 
 
 class ChatResponse(BaseModel):
@@ -95,15 +101,15 @@ class HealthResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Startup: load vectorstore once
+# Lifespan (replaces deprecated @app.on_event)
 # ---------------------------------------------------------------------------
 
 vectorstore: Optional[Chroma] = None
 
 
-@app.on_event("startup")
-async def load_vectorstore() -> None:
-    """Load the persisted ChromaDB vector store at startup."""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Load vector store at startup, clean up at shutdown."""
     global vectorstore
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = Chroma(
@@ -111,6 +117,25 @@ async def load_vectorstore() -> None:
         embedding_function=embeddings,
     )
     print(f"Vector store loaded: {vectorstore._collection.count()} vectors")
+    yield
+    # Shutdown cleanup if needed
+    vectorstore = None
+
+
+# ---------------------------------------------------------------------------
+# App
+# ---------------------------------------------------------------------------
+
+app = FastAPI(title="BimBam Buy RAG Agent", version="0.3.0", lifespan=lifespan)
+
+# CORS — restrict to known origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 # ---------------------------------------------------------------------------
@@ -125,11 +150,8 @@ async def chat(req: ChatRequest) -> ChatResponse:
     if vectorstore is None:
         raise HTTPException(status_code=503, detail="Vector store not ready")
 
-    if not req.message.strip():
-        raise HTTPException(status_code=422, detail="Message cannot be empty")
-
-    if not req.session_id.strip():
-        raise HTTPException(status_code=422, detail="Session ID cannot be empty")
+    if not _validate_session_id(req.session_id):
+        raise HTTPException(status_code=422, detail="Invalid session ID format")
 
     try:
         # Build context with conversation history
@@ -174,11 +196,8 @@ async def chat_stream(req: ChatRequest):
     if vectorstore is None:
         raise HTTPException(status_code=503, detail="Vector store not ready")
 
-    if not req.message.strip():
-        raise HTTPException(status_code=422, detail="Message cannot be empty")
-
-    if not req.session_id.strip():
-        raise HTTPException(status_code=422, detail="Session ID cannot be empty")
+    if not _validate_session_id(req.session_id):
+        raise HTTPException(status_code=422, detail="Invalid session ID format")
 
     async def event_generator() -> AsyncGenerator[str, None]:
         # Build conversation history context

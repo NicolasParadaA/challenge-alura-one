@@ -4,6 +4,8 @@ Provides a branded, streaming chat interface that communicates with the FastAPI
 backend via SSE (Server-Sent Events).
 """
 
+import os
+
 import streamlit as st
 import httpx
 import json
@@ -15,7 +17,7 @@ from datetime import datetime
 # Configuration
 # ---------------------------------------------------------------------------
 
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 CHAT_STREAM_ENDPOINT = f"{API_URL}/chat/stream"
 HEALTH_ENDPOINT = f"{API_URL}/health"
 
