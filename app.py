@@ -41,7 +41,6 @@ BRAND_CSS = """
 :root {
     --bimbam-primary: #FF6B35;
     --bimbam-secondary: #004E89;
-    --bimbam-bg: #F8F9FA;
 }
 
 /* ---- Header ---- */
@@ -58,33 +57,9 @@ BRAND_CSS = """
 }
 [data-testid="stChatMessage"][aria-label="user"] {
     border-left-color: var(--bimbam-secondary);
-    background: #eef3f9;
 }
 [data-testid="stChatMessage"][aria-label="assistant"] {
     border-left-color: var(--bimbam-primary);
-    background: #fff7f3;
-}
-
-/* ---- Avatar badges ---- */
-.avatar-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 18px;
-    margin-right: 6px;
-    vertical-align: middle;
-    flex-shrink: 0;
-}
-.avatar-user {
-    background: var(--bimbam-secondary);
-    color: white;
-}
-.avatar-assistant {
-    background: var(--bimbam-primary);
-    color: white;
 }
 
 /* ---- Timestamp caption ---- */
@@ -98,35 +73,6 @@ BRAND_CSS = """
 /* ---- Typography ---- */
 .stMarkdown p { line-height: 1.6; }
 .stMarkdown h2 { color: var(--bimbam-secondary); }
-
-/* ---- Welcome section ---- */
-.welcome-container {
-    background: linear-gradient(135deg, #fff7f3 0%, #eef3f9 100%);
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 16px;
-}
-.welcome-container h2 { margin-top: 0; color: var(--bimbam-secondary); }
-.welcome-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin: 16px 0;
-}
-.welcome-cards .card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px;
-    text-align: center;
-    transition: transform 0.15s, box-shadow 0.15s;
-    font-size: 0.95em;
-}
-.welcome-cards .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
 
 /* ---- Skeleton shimmer ---- */
 @keyframes shimmer {
@@ -162,6 +108,9 @@ if "messages" not in st.session_state:
 if "welcome_shown" not in st.session_state:
     st.session_state.welcome_shown = True
 
+if "welcome_question" not in st.session_state:
+    st.session_state.welcome_question = None
+
 # ---------------------------------------------------------------------------
 # Header
 # ---------------------------------------------------------------------------
@@ -194,36 +143,44 @@ def _now_timestamp() -> str:
     return datetime.now().strftime("%H:%M")
 
 
-def render_skeleton() -> None:
-    """Show animated shimmer placeholders while waiting for the stream."""
-    skeleton_html = """
+def render_skeleton() -> str:
+    """Return skeleton HTML to show animated shimmer placeholders."""
+    return """
     <div class="skeleton-container">
       <div class="skeleton-line skeleton-line-short"></div>
       <div class="skeleton-line skeleton-line-long"></div>
       <div class="skeleton-line skeleton-line-medium"></div>
     </div>
     """
-    st.markdown(skeleton_html, unsafe_allow_html=True)
 
 
 def render_welcome() -> None:
-    """Render the branded welcome section with topic cards."""
-    welcome_html = """
-    <div class="welcome-container">
-      <h2>👋 ¡Bienvenido a BimBam Buy!</h2>
-      <p><strong>BimBam Buy</strong> es tu tienda online de confianza.</p>
-      <p>Este chat puede ayudarte con:</p>
-      <div class="welcome-cards">
-        <div class="card">📋 Política de devoluciones</div>
-        <div class="card">💰 Métodos de pago</div>
-        <div class="card">🚚 Costos y tiempos de envío</div>
-        <div class="card">🤝 Programa de afiliados</div>
-        <div class="card">🛡️ Garantías de productos</div>
-      </div>
-      <p><em>Ejemplo: "¿Cuántos días tengo para devolver un producto?"</em></p>
-    </div>
-    """
-    st.markdown(welcome_html, unsafe_allow_html=True)
+    """Render the branded welcome section with clickable topic cards."""
+    st.markdown("### 👋 ¡Bienvenido a BimBam Buy!")
+    st.markdown("**BimBam Buy** es tu tienda online de confianza.")
+    st.markdown("Este chat puede ayudarte con:")
+
+    # Create clickable cards using Streamlit columns + buttons
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("📋 Política de devoluciones", key="card_devoluciones", use_container_width=True):
+            st.session_state.welcome_question = "¿Cuál es la política de devoluciones?"
+    with col2:
+        if st.button("💰 Métodos de pago", key="card_pagos", use_container_width=True):
+            st.session_state.welcome_question = "¿Qué métodos de pago aceptan?"
+    with col3:
+        if st.button("🚚 Costos de envío", key="card_envios", use_container_width=True):
+            st.session_state.welcome_question = "¿Cuánto cuesta el envío?"
+
+    col4, col5 = st.columns(2)
+    with col4:
+        if st.button("🤝 Programa de afiliados", key="card_afiliados", use_container_width=True):
+            st.session_state.welcome_question = "¿Cómo funciona el programa de afiliados?"
+    with col5:
+        if st.button("🛡️ Garantías de productos", key="card_garantias", use_container_width=True):
+            st.session_state.welcome_question = "¿Cuál es la garantía de los productos?"
+
+    st.markdown("*Ejemplo: \"¿Cuántos días tengo para devolver un producto?\"*")
 
 
 def handle_chat(prompt: str) -> None:
@@ -243,7 +200,7 @@ def handle_chat(prompt: str) -> None:
     # Create placeholder for assistant response
     with st.chat_message("assistant", avatar="🤖"):
         placeholder = st.empty()
-        render_skeleton()
+        placeholder.markdown(render_skeleton(), unsafe_allow_html=True)
 
         try:
             answer = ""
@@ -318,6 +275,14 @@ if st.session_state.welcome_shown and len(st.session_state.messages) == 0:
 
 if len(st.session_state.messages) > 0:
     st.session_state.welcome_shown = False
+
+# Handle welcome card clicks
+if st.session_state.welcome_question:
+    question = st.session_state.welcome_question
+    st.session_state.welcome_question = None
+    st.session_state.welcome_shown = False
+    handle_chat(question)
+    st.rerun()
 
 # ---------------------------------------------------------------------------
 # Display chat history
