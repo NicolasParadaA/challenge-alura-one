@@ -167,7 +167,23 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 
 ### Pregunta: "¿Cómo funciona el programa de afiliados?"
 
-> El programa de afiliados funciona de la siguiente manera: recibís un enlace o código rastreable. Cuando una compra válida se origina desde ese canal, la venta puede generar una comisión. Las comisiones varían según la categoría del producto y el volumen de ventas.
+> **Funcionamiento del Programa de Afiliados de BimBam Buy**
+>
+> **Participantes**
+> - Solo pueden participar los afiliados aprobados por BimBam Buy y que operen en los países habilitados de LATAM.
+>
+> **Generación de comisión**
+> - Se genera comisión cuando la compra se origina a través del enlace o código del afiliado, el pedido queda confirmado, no hay anulación fraudulenta, el pago está aprobado y la venta satisface las condiciones de atribución.
+>
+> **Actividades permitidas**
+> - Promoción digital, contenidos editoriales y campañas que utilicen el código o enlace asignado.
+> - Seguimiento de la atribución de cada venta.
+> - Recepción de liquidaciones de comisiones y soporte ante incidencias del programa.
+>
+> **Relación con otros procesos**
+> - Pagos: la liquidación de comisiones se gestiona junto al proceso de pagos.
+> - Reembolsos y devoluciones: pueden generar ajustes en la comisión.
+> - Envíos: el afiliado comunica la experiencia de compra, pero no influye en la logística.
 >
 > 📄 **Fuente:** programa-de-afiliados-de-bimbambuy.pdf
 
