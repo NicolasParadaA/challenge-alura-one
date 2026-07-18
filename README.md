@@ -20,8 +20,8 @@ El agente utiliza **RAG (Retrieval-Augmented Generation)** para buscar informaci
                                               │                             │
                                      ┌────────▼────────┐          ┌────────▼────────┐
                                      │                 │          │                 │
-                                     │    ChromaDB     │          │   Groq + Qwen   │
-                                     │  (Vectores)     │          │   (Llama 3.3)   │
+                                     │    ChromaDB     │          │  Groq + GPT-OSS  │
+                                     │  (Vectores)     │          │    (120B)        │
                                      │                 │          │                 │
                                      └─────────────────┘          └─────────────────┘
 ```
@@ -44,7 +44,7 @@ El agente utiliza **RAG (Retrieval-Augmented Generation)** para buscar informaci
 | **Motor RAG** | LangChain | Conecta búsqueda con generación |
 | **Base de datos** | ChromaDB | Almacena documentos como vectores |
 | **Embeddings** | HuggingFace | Convierte texto en números para buscar |
-| **IA generativa** | Groq (Qwen 3.6) | Genera respuestas inteligentes |
+| **IA generativa** | Groq (GPT-OSS-120B) | Genera respuestas inteligentes |
 | **Deploy** | Docker + Oracle Cloud | Ejecución en la nube |
 
 ---
