@@ -131,6 +131,22 @@ streamlit run app.py
 
 ## Deploy en Oracle Cloud
 
+### Evidencia de Deploy
+
+**Enlace público:** [http://144.22.62.189:8501](http://144.22.62.189:8501)
+
+**Captura de pantalla:**
+
+![BimBam Buy Asistente Virtual](docs/screenshot.png)
+
+### Configuración de la VM
+
+- **Proveedor:** Oracle Cloud Infrastructure (OCI)
+- **Tipo:** VM.Standard.A1.Flex (ARM64)
+- **Recursos:** 2 OCPUs, 12GB RAM
+- **Sistema Operativo:** Ubuntu 24.04
+- **Puertos abiertos:** 22 (SSH), 8501 (Streamlit)
+
 ### 1. Crear VM ARM64
 
 - Image: Ubuntu 24.04
@@ -211,6 +227,52 @@ data: {"sources": ["guia-de-envios.pdf"], "done": true}
   "documents_loaded": true
 }
 ```
+
+## Ejemplos de Preguntas y Respuestas
+
+### Ejemplos de preguntas que el agente puede responder
+
+- ¿Cuál es la política de devoluciones?
+- ¿Cómo funciona el programa de afiliados?
+- ¿Qué métodos de pago aceptan?
+- ¿Cuánto cuesta el envío?
+- ¿Cuál es la garantía de los productos?
+
+### Ejemplos de respuestas generadas
+
+**Pregunta:** ¿Cuánto cuesta el envío?
+
+**Respuesta:**
+> Los costos de envío varían según la zona y el peso del paquete. Para Buenos Aires y alrededores, el envío estándar tiene un costo de $5.000. Para el interior del país, los tiempos pueden ser de 3 a 7 días hábiles dependingiendo de la ubicación. Consultá la guía completa de envíos para más detalles sobre tu zona.
+
+**Fuentes:** guia-de-tiempos-y-costos-de-envio-de-bimbambuy.pdf
+
+---
+
+**Pregunta:** ¿Cuál es la política de devoluciones?
+
+**Respuesta:**
+> La política de devoluciones de BimBam Buy permite devolver productos dentro de los primeros 30 días después de la compra. El producto debe estar en perfectas condiciones, con etiquetas originales y sin uso. Para iniciar una devolución, contactá a nuestro equipo de soporte con el número de orden y el motivo de la devolución.
+
+**Fuentes:** politica-de-reembolsos-y-devoluciones-de-bimbambuy.pdf
+
+---
+
+**Pregunta:** ¿Cómo funciona el programa de afiliados?
+
+**Respuesta:**
+> El programa de afiliados de BimBam Buy funciona de la siguiente manera: recibís un enlace o código rastreable. Cuando una compra válida se origina desde ese canal, la venta puede generar una comisión. Las comisiones varían según la categoría del producto y el volumen de ventas. Registrándote como afiliado, accedés a herramientas de seguimiento y reportes de tus ganancias.
+
+**Fuentes:** programa-de-afiliados-de-bimbambuy.pdf
+
+---
+
+**Pregunta:** ¿Qué métodos de pago aceptan?
+
+**Respuesta:**
+> Aceptamos varios métodos de pago que pueden variar según el país y la categoría. Entre ellos: tarjeta de crédito, tarjeta de débito, transferencia bancaria, pago en efectivo en puntos habilitados, y billeteras digitales disponibles por país. También ofrecemos cuotas o financiamiento cuando aplique.
+
+**Fuentes:** preguntas-frecuentes-sobre-metodos-de-pago-de-bimbambuy.pdf
 
 ## Documentos de BimBam Buy
 
