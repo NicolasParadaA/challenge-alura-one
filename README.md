@@ -148,7 +148,7 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 **Configuración de la VM:**
 - Proveedor: Oracle Cloud Infrastructure (OCI)
 - Tipo: VM.Standard.A1.Flex (ARM64)
-- Recursos: 2 OCPUs, 12GB RAM
+- Recursos: 1 OCPU, 6GB RAM
 - Sistema: Ubuntu 24.04
 
 **Capturas de pantalla:**
