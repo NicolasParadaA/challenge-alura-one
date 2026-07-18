@@ -135,9 +135,13 @@ streamlit run app.py
 
 **Enlace público:** [http://144.22.62.189:8501](http://144.22.62.189:8501)
 
-**Captura de pantalla:**
+**Captura de pantalla - Modo Claro:**
 
-![BimBam Buy Asistente Virtual](docs/screenshot.png)
+![BimBam Buy - Modo Claro](docs/screenshot-1.png)
+
+**Captura de pantalla - Modo Oscuro:**
+
+![BimBam Buy - Modo Oscuro](docs/screenshot-2.png)
 
 ### Configuración de la VM
 
