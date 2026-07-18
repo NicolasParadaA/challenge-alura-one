@@ -128,7 +128,21 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 
 ### Pregunta: "¿Cuál es la política de devoluciones?"
 
-> La política de devoluciones de BimBam Buy permite devolver productos dentro de los primeros 30 días después de la compra. El producto debe estar en perfectas condiciones, con etiquetas originales y sin uso. Para iniciar una devolución, contactá a nuestro equipo de soporte con el número de orden.
+> **Política de devoluciones de BimBam Buy**
+>
+> **Momento de la cancelación**
+> - Si la orden se cancela antes del despacho, normalmente no se genera costo de envío.
+> - Si la orden ya fue despachada o entregada, los costos logísticos pueden considerarse al resolver la devolución.
+>
+> **Reembolsos por garantía**
+> - Cuando el caso es por falla de producto, primero se verifica el Manual de Garantía de Productos.
+> - Si la garantía aplica, el reembolso se procesa según lo indicado en el manual.
+>
+> **Método de reembolso**
+> - El reembolso se realiza al mismo medio de pago usado en la compra, salvo que exista una imposibilidad técnica o normativa.
+>
+> **Factores que pueden variar por país**
+> - Disponibilidad de métodos de pago y condiciones de reembolso pueden cambiar según normativa local, integración bancaria, moneda y monto.
 >
 > 📄 **Fuente:** politica-de-reembolsos-y-devoluciones-de-bimbambuy.pdf
 
