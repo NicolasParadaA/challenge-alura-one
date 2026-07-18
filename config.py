@@ -15,7 +15,7 @@ DOCS_DIR: str = "docs"
 
 # Model settings
 EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
-LLM_MODEL: str = "qwen/qwen3.6-27b"
+LLM_MODEL: str = "openai/gpt-oss-120b"
 
 # Chunking
 CHUNK_SIZE: int = 500
