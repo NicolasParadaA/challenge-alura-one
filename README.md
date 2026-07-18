@@ -199,12 +199,6 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 - Recursos: 1 OCPU, 6GB RAM
 - Sistema: Ubuntu 24.04
 
-**Capturas de pantalla:**
-
-![Modo Claro](docs/screenshot-1.png)
-
-![Modo Oscuro](docs/screenshot-2.png)
-
-**Demo en vivo:**
+**Demo GIF en vivo, toca para reproducir:**
 
 ![Demo del Asistente Virtual](docs/demo.gif)
