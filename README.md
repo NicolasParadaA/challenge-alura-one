@@ -204,3 +204,7 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 ![Modo Claro](docs/screenshot-1.png)
 
 ![Modo Oscuro](docs/screenshot-2.png)
+
+**Demo en vivo:**
+
+![Demo del Asistente Virtual](docs/demo.gif)
