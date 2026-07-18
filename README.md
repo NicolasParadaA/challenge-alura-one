@@ -150,7 +150,16 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 
 ### Pregunta: "¿Qué métodos de pago aceptan?"
 
-> Aceptamos varios métodos de pago que pueden variar según el país y la categoría: tarjeta de crédito, tarjeta de débito, transferencia bancaria, pago en efectivo en puntos habilitados, y billeteras digitales disponibles por país. También ofrecemos cuotas o financiamiento cuando aplique.
+> Los métodos de pago que BimBam Buy acepta son:
+>
+> - Tarjeta de crédito
+> - Tarjeta de débito
+> - Transferencia bancaria
+> - Pago en efectivo en los puntos habilitados
+> - Billeteras digitales (según el país)
+> - Cuotas o financiamiento, cuando corresponda
+>
+> **Nota:** la disponibilidad de cada método puede variar según el país, la categoría del producto y el monto de la compra.
 >
 > 📄 **Fuente:** preguntas-frecuentes-sobre-metodos-de-pago-de-bimbambuy.pdf
 
