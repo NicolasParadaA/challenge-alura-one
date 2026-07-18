@@ -1,61 +1,157 @@
-# 🤖 BimBam Buy — Asistente Virtual
+# 🤖 BimBam Buy — Asistente Virtual Inteligente
 
-Chatbot inteligente que responde preguntas de colaboradores de BimBam Buy utilizando documentos internos de la empresa (políticas, envíos, pagos, garantías y afiliados).
+Un chatbot corporativo potenciado por Inteligencia Artificial que responde automáticamente las preguntas más frecuentes de los colaboradores de **BimBam Buy**, una tienda online de confianza.
 
-## Cómo funciona
+El agente utiliza **RAG (Retrieval-Augmented Generation)** para buscar información en documentos oficiales de la empresa y generar respuestas precisas y actualizadas.
 
-1. El usuario escribe una pregunta
-2. El sistema busca la información relevante en 5 PDFs de la empresa
-3. La IA genera una respuesta precisa con las fuentes consultadas
+---
 
-## Arquitectura
+## 🏗️ Arquitectura de la Solución
 
 ```
-Streamlit (Frontend) → FastAPI (Backend) → LangChain (RAG) → ChromaDB + Groq LLM
+┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+│                  │      │                  │      │                  │
+│    Streamlit     │─────►│     FastAPI      │─────►│  LangChain RAG   │
+│    (Frontend)    │ HTTP │    (Backend)     │      │   (Pipeline)     │
+│                  │      │                  │      │                  │
+└──────────────────┘      └──────────────────┘      └────────┬─────────┘
+                                                             │
+                                              ┌──────────────┴──────────────┐
+                                              │                             │
+                                     ┌────────▼────────┐          ┌────────▼────────┐
+                                     │                 │          │                 │
+                                     │    ChromaDB     │          │   Groq + Qwen   │
+                                     │  (Vectores)     │          │   (Llama 3.3)   │
+                                     │                 │          │                 │
+                                     └─────────────────┘          └─────────────────┘
 ```
 
-## Tecnologías
+**Flujo de trabajo:**
+1. El colaborador escribe una pregunta en el chat
+2. El sistema busca los fragmentos más relevantes en los documentos
+3. La IA genera una respuesta clara basada en la información encontrada
+4. Se muestra la respuesta junto con las fuentes consultadas
 
-- **Frontend:** Streamlit
-- **Backend:** FastAPI, Python 3.12
-- **IA:** LangChain, Groq (Llama 3.3), HuggingFace Embeddings
-- **Base de datos vectorial:** ChromaDB
-- **Deploy:** Docker en Oracle Cloud (OCI)
+---
 
-## Ejecutar el proyecto
+## 💻 Tecnologías y Herramientas
+
+| Componente | Tecnología | ¿Para qué sirve? |
+|------------|-----------|-------------------|
+| **Lenguaje** | Python 3.12 | Base del proyecto |
+| **Frontend** | Streamlit | Interfaz de chat intuitiva |
+| **Backend** | FastAPI | API REST de alta velocidad |
+| **Motor RAG** | LangChain | Conecta búsqueda con generación |
+| **Base de datos** | ChromaDB | Almacena documentos como vectores |
+| **Embeddings** | HuggingFace | Convierte texto en números para buscar |
+| **IA generativa** | Groq (Qwen 3.6) | Genera respuestas inteligentes |
+| **Deploy** | Docker + Oracle Cloud | Ejecución en la nube |
+
+---
+
+## 🚀 Instrucciones para Ejecutar
+
+### Opción 1: Con Docker (Recomendado)
 
 ```bash
-# Clonar
+# 1. Clonar el repositorio
 git clone https://github.com/NicolasParadaA/challenge-alura-one.git
 cd challenge-alura-one
 
-# Configurar variables de entorno
+# 2. Configurar variables de entorno
 cp .env.example .env
-# Editar .env con tu GROQ_API_KEY
+# Editar .env y agregar tu GROQ_API_KEY (gratis en groq.com)
 
-# Ejecutar con Docker
+# 3. Ejecutar
 docker-compose up -d --build
 ```
 
-Abrir http://localhost:8501
+Abrir **http://localhost:8501** en el navegador.
 
-## Ejemplo de preguntas y respuestas
+### Opción 2: Sin Docker
 
-**¿Cuánto cuesta el envío?**
+```bash
+# 1. Instalar dependencias
+pip install -r requirements.txt
 
-> Los costos de envío varían según la zona. Para Buenos Aires, el envío estándar tiene un costo de $5.000. Para el interior, los tiempos son de 3 a 7 días hábiles.
+# 2. Indexar documentos
+python ingest.py
 
-**¿Cuál es la política de devoluciones?**
+# 3. Ejecutar Backend (Terminal 1)
+uvicorn api:app --reload --port 8000
 
-> Se pueden devolver productos dentro de los primeros 30 días. El producto debe estar en perfectas condiciones, con etiquetas originales y sin uso.
+# 4. Ejecutar Frontend (Terminal 2)
+streamlit run app.py
+```
 
-**¿Qué métodos de pago aceptan?**
+---
 
-> Tarjeta de crédito, débito, transferencia bancaria, pago en efectivo en puntos habilitados, y billeteras digitales. También ofrecemos cuotas o financiamiento.
+## 💬 Ejemplos de Preguntas que el Agente Puede Responder
 
-## Deploy en Oracle Cloud
+El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 
-**Enlace:** [http://144.22.62.189:8501](http://144.22.62.189:8501)
+| Documento | Tema |
+|-----------|------|
+| 📋 Política de reembolsos | Devoluciones y reembolsos |
+| 💳 Métodos de pago | Preguntas frecuentes sobre pagos |
+| 🚚 Guía de envíos | Tiempos y costos por zona |
+| 🛡️ Manual de garantía | Períodos y cobertura |
+| 🤝 Programa de afiliados | Comisiones y reglas |
+
+**Preguntas de ejemplo:**
+- ¿Cuál es la política de devoluciones?
+- ¿Qué métodos de pago aceptan?
+- ¿Cuánto cuesta el envío?
+- ¿Cómo funciona el programa de afiliados?
+- ¿Cuál es la garantía de los productos?
+
+---
+
+## 📝 Ejemplos de Respuestas Generadas
+
+### Pregunta: "¿Cuánto cuesta el envío?"
+
+> Los costos de envío varían según la zona. Para Buenos Aires y alrededores, el envío estándar tiene un costo de $5.000. Para el interior del país, los tiempos pueden ser de 3 a 7 días hábiles dependiendo de la ubicación.
+>
+> 📄 **Fuente:** guia-de-tiempos-y-costos-de-envio-de-bimbambuy.pdf
+
+---
+
+### Pregunta: "¿Cuál es la política de devoluciones?"
+
+> La política de devoluciones de BimBam Buy permite devolver productos dentro de los primeros 30 días después de la compra. El producto debe estar en perfectas condiciones, con etiquetas originales y sin uso. Para iniciar una devolución, contactá a nuestro equipo de soporte con el número de orden.
+>
+> 📄 **Fuente:** politica-de-reembolsos-y-devoluciones-de-bimbambuy.pdf
+
+---
+
+### Pregunta: "¿Qué métodos de pago aceptan?"
+
+> Aceptamos varios métodos de pago que pueden variar según el país y la categoría: tarjeta de crédito, tarjeta de débito, transferencia bancaria, pago en efectivo en puntos habilitados, y billeteras digitales disponibles por país. También ofrecemos cuotas o financiamiento cuando aplique.
+>
+> 📄 **Fuente:** preguntas-frecuentes-sobre-metodos-de-pago-de-bimbambuy.pdf
+
+---
+
+### Pregunta: "¿Cómo funciona el programa de afiliados?"
+
+> El programa de afiliados funciona de la siguiente manera: recibís un enlace o código rastreable. Cuando una compra válida se origina desde ese canal, la venta puede generar una comisión. Las comisiones varían según la categoría del producto y el volumen de ventas.
+>
+> 📄 **Fuente:** programa-de-afiliados-de-bimbambuy.pdf
+
+---
+
+## ☁️ Deploy en Oracle Cloud
+
+**Enlace público:** [http://144.22.62.189:8501](http://144.22.62.189:8501)
+
+**Configuración de la VM:**
+- Proveedor: Oracle Cloud Infrastructure (OCI)
+- Tipo: VM.Standard.A1.Flex (ARM64)
+- Recursos: 2 OCPUs, 12GB RAM
+- Sistema: Ubuntu 24.04
+
+**Capturas de pantalla:**
 
 ![Modo Claro](docs/screenshot-1.png)
 
