@@ -15,7 +15,7 @@ DOCS_DIR: str = "docs"
 
 # Model settings
 EMBEDDING_MODEL: str = "paraphrase-multilingual-MiniLM-L12-v2"
-LLM_MODEL: str = "llama-3.3-70b-versatile"
+LLM_MODEL: str = "qwen/qwen3.6-27b"
 
 # Chunking
 CHUNK_SIZE: int = 500
