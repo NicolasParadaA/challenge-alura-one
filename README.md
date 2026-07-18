@@ -20,8 +20,8 @@ El agente utiliza **RAG (Retrieval-Augmented Generation)** para buscar informaci
                                               │                             │
                                      ┌────────▼────────┐          ┌────────▼────────┐
                                      │                 │          │                 │
-                                     │    ChromaDB     │          │  Groq + GPT-OSS  │
-                                     │  (Vectores)     │          │    (120B)        │
+                                     │    ChromaDB     │          │  Groq + GPT-OSS │
+                                     │  (Vectores)     │          │    (120B)       │
                                      │                 │          │                 │
                                      └─────────────────┘          └─────────────────┘
 ```
