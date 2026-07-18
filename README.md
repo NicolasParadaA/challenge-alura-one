@@ -111,7 +111,16 @@ El agente está entrenado con 5 documentos oficiales de BimBam Buy:
 
 ### Pregunta: "¿Cuánto cuesta el envío?"
 
-> Los costos de envío varían según la zona. Para Buenos Aires y alrededores, el envío estándar tiene un costo de $5.000. Para el interior del país, los tiempos pueden ser de 3 a 7 días hábiles dependiendo de la ubicación.
+> El costo del envío no es un valor fijo, sino que se determina en función de varios factores:
+>
+> - Destino del pedido (país, región y ciudad).
+> - Peso volumétrico y tamaño del paquete.
+> - Servicio de entrega seleccionado (estándar, exprés, etc.).
+> - Promociones vigentes y umbral de envío gratis que pueda aplicar en el país o campaña.
+>
+> El importe final del envío se muestra antes de confirmar la compra, de modo que el cliente siempre sabe cuánto pagará.
+>
+> En resumen, el precio del envío varía según destino, peso/tamaño, tipo de servicio y posibles promociones; se visualiza en el checkout antes de finalizar la compra.
 >
 > 📄 **Fuente:** guia-de-tiempos-y-costos-de-envio-de-bimbambuy.pdf
 
